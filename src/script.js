@@ -4,7 +4,7 @@
   var second = document.getElementById("sec");
 
   var start = document.getElementById("start");
-  var stop = document.getElementById("stop");
+  var pause = document.getElementById("stop");
   var reset = document.getElementById("reset");
 
   var countDownTimer = null;
@@ -16,7 +16,7 @@
 
     function startInterval() {
       start.style.display = "none";
-      stop.style.display = "initial";
+      pause.style.display = "initial";
 
       countDownTimer = setInterval(() => {
         timer();
@@ -25,12 +25,35 @@
     startInterval();
   });
 
-  function stopInterval() {
+  pause.addEventListener("click", function () {
+    stopInterval("pause");
+  });
+
+  reset.addEventListener("click", function () {
+    stopInterval();
+    hour.value = "";
+    minute.value = "";
+    second.value = "";
+  });
+
+  function stopInterval(type) {
+    if (type === "pause") {
+      start.innerHTML ="Continue";
+    }
     clearInterval(countDownTimer);
-    stop.style.display = "none";
+    pause.style.display = "none";
     start.style.display = "initial";
   }
+
   function timer() {
+    if (second.value > 60) {
+      minute.value++;
+      second.value = parseInt(second.value) - 59;
+    }
+    if (minute.value > 60) {
+      hour.value++;
+      minute.value = parseInt(minute.value) - 60;
+    }
     if (hour.value == 0 && minute.value == 0 && second.value == 0) {
       history.value = "";
       minute.value = "";
@@ -42,8 +65,8 @@
       second.value = 59;
       minute.value = `${minute.value <= 10 ? "0" : ""}${minute.value - 1}`;
     } else if (hour.value != 0 && minute.value == 0) {
-        minute.value = 60;
-        hour.value = `${hour.value <= 10 ? "0" : ""}${hour.value - 1}`;
-      }
+      minute.value = 60;
+      hour.value = `${hour.value <= 10 ? "0" : ""}${hour.value - 1}`;
+    }
   }
 })();
